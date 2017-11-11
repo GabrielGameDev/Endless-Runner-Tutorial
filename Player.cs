@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
 	private bool sliding = false;
 	private float slideStart;
 	private Vector3 boxColliderSize;
+	private bool isSwipping = false;
+	private Vector2 startingTouch;
 
 	// Use this for initialization
 	void Start () {
@@ -50,6 +52,54 @@ public class Player : MonoBehaviour {
 		{
 			Slide();
 		}
+
+		if(Input.touchCount == 1)
+		{
+			if (isSwipping)
+			{
+				Vector2 diff = Input.GetTouch(0).position - startingTouch;
+				diff = new Vector2(diff.x / Screen.width, diff.y / Screen.width);
+				if(diff.magnitude > 0.01f)
+				{
+					if(Mathf.Abs(diff.y) > Mathf.Abs(diff.x))
+					{
+						if(diff.y < 0)
+						{
+							Slide();
+						}
+						else
+						{
+							Jump();
+						}
+					}
+					else
+					{
+						if(diff.x < 0)
+						{
+							ChangeLane(-1);
+						}
+						else
+						{
+							ChangeLane(1);
+						}
+					}
+
+					isSwipping = false;
+				}
+			}
+
+			if (Input.GetTouch(0).phase == TouchPhase.Began)
+			{
+				startingTouch = Input.GetTouch(0).position;
+				isSwipping = true;
+			}
+			else if (Input.GetTouch(0).phase == TouchPhase.Ended)
+			{
+				isSwipping = false;
+			}
+		}
+
+		
 
 		if (jumping)
 		{
