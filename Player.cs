@@ -9,6 +9,11 @@ public class Player : MonoBehaviour {
 	public float jumpLength;
 	public float jumpHeight;
 	public float slideLength;
+	public int maxLife = 3;
+	public float minSpeed = 10f;
+	public float maxSpeed = 30f;
+	public float invincibleTime;
+	public GameObject model;
 
 	private Animator anim;
 	private Rigidbody rb;
@@ -22,6 +27,10 @@ public class Player : MonoBehaviour {
 	private Vector3 boxColliderSize;
 	private bool isSwipping = false;
 	private Vector2 startingTouch;
+	private int currentLife;
+	private bool invincible = false;
+	static int blinkingValue;
+	private UIManager uiManager;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +40,10 @@ public class Player : MonoBehaviour {
 		boxCollider = GetComponent<BoxCollider>();
 		boxColliderSize = boxCollider.size;
 		anim.Play("runStart");
+		currentLife = maxLife;
+		speed = minSpeed;
+		blinkingValue = Shader.PropertyToID("_BlinkingValue");
+		uiManager = FindObjectOfType<UIManager>();
 	}
 	
 	// Update is called once per frame
@@ -173,5 +186,56 @@ public class Player : MonoBehaviour {
 			sliding = true;
 
 		}
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (invincible)
+			return;
+
+		if (other.CompareTag("Obstacle"))
+		{
+			currentLife--;
+			uiManager.UpdateLives(currentLife);
+			anim.SetTrigger("Hit");
+			speed = 0;
+			if(currentLife <= 0)
+			{
+				//game over
+			}
+			else
+			{
+				StartCoroutine(Blinking(invincibleTime));
+			}
+		}
+	}
+
+	IEnumerator Blinking(float time)
+	{
+		invincible = true;
+		float timer = 0;
+		float currentBlink = 1f;
+		float lastBlink = 0;
+		float blinkPeriod = 0.1f;
+		bool enabled = false;
+		yield return new WaitForSeconds(1f);
+		speed = minSpeed;
+		while(timer < time && invincible)
+		{
+			model.SetActive(enabled);
+			//Shader.SetGlobalFloat(blinkingValue, currentBlink);
+			yield return null;
+			timer += Time.deltaTime;
+			lastBlink += Time.deltaTime;
+			if(blinkPeriod < lastBlink)
+			{
+				lastBlink = 0;
+				currentBlink = 1f - currentBlink;
+				enabled = !enabled;
+			}
+		}
+		model.SetActive(true);
+		//Shader.SetGlobalFloat(blinkingValue, 0);
+		invincible = false;
 	}
 }
