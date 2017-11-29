@@ -6,13 +6,17 @@ public class Track : MonoBehaviour {
 
 	public GameObject[] obstacles;
 	public Vector2 numberOfObstacles;
+	public GameObject coin;
+	public Vector2 numberOfCoins;
 
 	public List<GameObject> newObstacles;
+	public List<GameObject> newCoins;
 
 	// Use this for initialization
 	void Start () {
 
 		int newNumberOfObstacles = (int)Random.Range(numberOfObstacles.x, numberOfObstacles.y);
+		int newNumberOfCoins = (int)Random.Range(numberOfCoins.x, numberOfCoins.y);
 
 		for (int i = 0; i < newNumberOfObstacles; i++)
 		{
@@ -20,7 +24,14 @@ public class Track : MonoBehaviour {
 			newObstacles[i].SetActive(false);
 		}
 
+		for (int i = 0; i < newNumberOfCoins; i++)
+		{
+			newCoins.Add(Instantiate(coin, transform));
+			newCoins[i].SetActive(false);
+		}
+
 		PositionateObstacles();
+		PositionateCoins();
 
 	}
 	
@@ -32,6 +43,22 @@ public class Track : MonoBehaviour {
 			float posZMax = (297f / newObstacles.Count) + (297f / newObstacles.Count) * i + 1;
 			newObstacles[i].transform.localPosition = new Vector3(0, 0, Random.Range(posZMin, posZMax));
 			newObstacles[i].SetActive(true);
+			if (newObstacles[i].GetComponent<ChangeLane>() != null)
+				newObstacles[i].GetComponent<ChangeLane>().PositionLane();
+		}
+	}
+
+	void PositionateCoins()
+	{
+		float minZPos = 10f;
+		for (int i = 0; i < newCoins.Count; i++)
+		{
+			float maxZPos = minZPos + 5f;
+			float randomZPos = Random.Range(minZPos, maxZPos);
+			newCoins[i].transform.localPosition = new Vector3(transform.position.x, transform.position.y, randomZPos);
+			newCoins[i].SetActive(true);
+			newCoins[i].GetComponent<ChangeLane>().PositionLane();
+			minZPos = randomZPos + 1;
 		}
 	}
 
@@ -40,7 +67,8 @@ public class Track : MonoBehaviour {
 		if (other.CompareTag("Player"))
 		{
 			transform.position = new Vector3(0, 0, transform.position.z + 297 * 2);
-			Invoke("PositionateObstacles", 5f);
+			PositionateObstacles();
+			PositionateCoins();
 		}
 	}
 

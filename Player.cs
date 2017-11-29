@@ -31,6 +31,7 @@ public class Player : MonoBehaviour {
 	private bool invincible = false;
 	static int blinkingValue;
 	private UIManager uiManager;
+	private int coins;
 
 	// Use this for initialization
 	void Start () {
@@ -190,6 +191,14 @@ public class Player : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other)
 	{
+
+		if (other.CompareTag("Coin"))
+		{
+			coins++;
+			uiManager.UpdateCoins(coins);
+			other.transform.parent.gameObject.SetActive(false);
+		}
+
 		if (invincible)
 			return;
 
@@ -201,7 +210,10 @@ public class Player : MonoBehaviour {
 			speed = 0;
 			if(currentLife <= 0)
 			{
-				//game over
+				speed = 0;
+				anim.SetBool("Dead", true);
+				uiManager.gameOverPanel.SetActive(true);
+				Invoke("CallMenu", 2f);
 			}
 			else
 			{
@@ -237,5 +249,10 @@ public class Player : MonoBehaviour {
 		model.SetActive(true);
 		//Shader.SetGlobalFloat(blinkingValue, 0);
 		invincible = false;
+	}
+
+	void CallMenu()
+	{
+		GameManager.gm.EndRun();
 	}
 }
