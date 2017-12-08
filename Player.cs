@@ -31,8 +31,10 @@ public class Player : MonoBehaviour {
 	private bool invincible = false;
 	static int blinkingValue;
 	private UIManager uiManager;
-	private int coins;
-	private float score;
+	[HideInInspector]
+	public int coins;
+	[HideInInspector]
+	public float score;
 
 	// Use this for initialization
 	void Start () {
