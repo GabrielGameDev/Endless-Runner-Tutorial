@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+public enum MissionType
+{
+	SingleRun, TotalMeter, FishesSingleRun
+}
+
 public abstract class MissionBase : MonoBehaviour {
 
 	public int max;

@@ -48,6 +48,7 @@ public class Player : MonoBehaviour {
 		speed = minSpeed;
 		blinkingValue = Shader.PropertyToID("_BlinkingValue");
 		uiManager = FindObjectOfType<UIManager>();
+		GameManager.gm.StartMissions();
 	}
 	
 	// Update is called once per frame
