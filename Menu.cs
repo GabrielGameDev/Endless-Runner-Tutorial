@@ -12,6 +12,7 @@ public class Menu : MonoBehaviour {
 	void Start () {
 
 		SetMission();
+		GameManager.gm.Save();
 
 	}
 	
