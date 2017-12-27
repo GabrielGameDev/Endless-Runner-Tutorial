@@ -174,4 +174,33 @@ public class GameManager : MonoBehaviour {
 			missions[i].RunStart();
 		}
 	}
+
+	public void GenerateMission(int i)
+	{
+		Destroy(missions[i].gameObject);
+
+		GameObject newMission = new GameObject("Mission" + i);
+		newMission.transform.SetParent(transform);
+		MissionType[] missionType = { MissionType.SingleRun, MissionType.TotalMeter, MissionType.FishesSingleRun };
+		int randomType = Random.Range(0, missionType.Length);
+		if (randomType == (int)MissionType.SingleRun)
+		{
+			missions[i] = newMission.AddComponent<SingleRun>();
+
+		}
+		else if (randomType == (int)MissionType.TotalMeter)
+		{
+			missions[i] = newMission.AddComponent<TotalMeters>();
+
+		}
+		else if (randomType == (int)MissionType.FishesSingleRun)
+		{
+			missions[i] = newMission.AddComponent<FishesSingleRun>();
+
+		}
+
+		missions[i].Created();
+
+		FindObjectOfType<Menu>().SetMission();
+	}
 }

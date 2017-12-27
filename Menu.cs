@@ -7,18 +7,24 @@ public class Menu : MonoBehaviour {
 
 	public Text[] missionDescription, missionReward, missionProgress;
 	public GameObject[] rewardButton;
+	public Text coinsText;
 
 	// Use this for initialization
 	void Start () {
 
 		SetMission();
-		GameManager.gm.Save();
+		
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void UpdateCoins(int coins)
+	{
+		coinsText.text = coins.ToString();
 	}
 
 	public void StartRun()
@@ -39,5 +45,15 @@ public class Menu : MonoBehaviour {
 				rewardButton[i].SetActive(true);
 			}
 		}
+
+		GameManager.gm.Save();
+	}
+
+	public void GetReward(int missionIndex)
+	{
+		GameManager.gm.coins += GameManager.gm.GetMission(missionIndex).reward;
+		UpdateCoins(GameManager.gm.coins);
+		rewardButton[missionIndex].SetActive(false);
+		GameManager.gm.GenerateMission(missionIndex);
 	}
 }
