@@ -260,6 +260,7 @@ public class Player : MonoBehaviour {
 
 	void CallMenu()
 	{
+		GameManager.gm.coins += coins;
 		GameManager.gm.EndRun();
 	}
 

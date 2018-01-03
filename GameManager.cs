@@ -16,12 +16,16 @@ public class PlayerData
 	public int[] currentProgress;
 	public int[] reward;
 	public string[] missionType;
+	public int[] characterCost;
 }
 
 public class GameManager : MonoBehaviour {
 
 	public static GameManager gm;
 	public int coins;
+	public int[] characterCost;
+
+	public int characterIndex;
 
 	private MissionBase[] missions;
 	private string filePath;
@@ -91,6 +95,7 @@ public class GameManager : MonoBehaviour {
 		data.currentProgress = new int[2];
 		data.reward = new int[2];
 		data.missionType = new string[2];
+		data.characterCost = new int[characterCost.Length];
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -99,6 +104,11 @@ public class GameManager : MonoBehaviour {
 			data.currentProgress[i] = missions[i].currentProgress;
 			data.reward[i] = missions[i].reward;
 			data.missionType[i] = missions[i].missionType.ToString();
+		}
+
+		for (int i = 0; i < characterCost.Length; i++)
+		{
+			data.characterCost[i] = characterCost[i];
 		}
 
 		bf.Serialize(file, data);
@@ -140,6 +150,11 @@ public class GameManager : MonoBehaviour {
 			missions[i].currentProgress = data.currentProgress[i];
 			missions[i].reward = data.reward[i];
 		}
+
+		for (int i = 0; i < data.characterCost.Length; i++)
+		{
+			characterCost[i] = data.characterCost[i];
+		}
 	}
 
 	// Use this for initialization
@@ -152,8 +167,9 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
-	public void StartRun()
+	public void StartRun(int charIndex)
 	{
+		characterIndex = charIndex;
 		SceneManager.LoadScene("Game");
 	}
 
