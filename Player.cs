@@ -36,23 +36,31 @@ public class Player : MonoBehaviour {
 	[HideInInspector]
 	public float score;
 
+	private bool canMove;
+
 	// Use this for initialization
 	void Start () {
 
+		canMove = false;
 		rb = GetComponent<Rigidbody>();
 		anim = GetComponentInChildren<Animator>();
 		boxCollider = GetComponent<BoxCollider>();
 		boxColliderSize = boxCollider.size;
-		anim.Play("runStart");
+		
 		currentLife = maxLife;
-		speed = minSpeed;
+		
 		blinkingValue = Shader.PropertyToID("_BlinkingValue");
 		uiManager = FindObjectOfType<UIManager>();
 		GameManager.gm.StartMissions();
+
+		Invoke("StartRun", 3f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (!canMove)
+			return;
 
 		score += Time.deltaTime * speed;
 		uiManager.UpdateScore((int)score);
@@ -157,8 +165,16 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate()
-	{
+	{ 
 		rb.velocity = Vector3.forward * speed;
+	}
+
+	void StartRun()
+	{
+		PlayServices.UnlockAnchievment(EndlessRunnerServices.achievement_faa_uma_corrida);
+		anim.Play("runStart");
+		speed = minSpeed;
+		canMove = true;
 	}
 
 	void ChangeLane(int direction)
@@ -201,6 +217,7 @@ public class Player : MonoBehaviour {
 
 		if (other.CompareTag("Coin"))
 		{
+			PlayServices.IncrementAchievment(EndlessRunnerServices.achievement_colete_100_peixes, 1);
 			coins++;
 			uiManager.UpdateCoins(coins);
 			other.transform.parent.gameObject.SetActive(false);
@@ -211,6 +228,7 @@ public class Player : MonoBehaviour {
 
 		if (other.CompareTag("Obstacle"))
 		{
+			canMove = false;
 			currentLife--;
 			uiManager.UpdateLives(currentLife);
 			anim.SetTrigger("Hit");
@@ -224,9 +242,15 @@ public class Player : MonoBehaviour {
 			}
 			else
 			{
+				Invoke("CanMove", 0.75f);
 				StartCoroutine(Blinking(invincibleTime));
 			}
 		}
+	}
+
+	void CanMove()
+	{
+		canMove = true;
 	}
 
 	IEnumerator Blinking(float time)

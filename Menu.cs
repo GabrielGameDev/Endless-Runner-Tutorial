@@ -26,6 +26,11 @@ public class Menu : MonoBehaviour {
 		
 	}
 
+	public void ShowAchievmentsUI()
+	{
+		PlayServices.ShowAchievments();
+	}
+
 	public void UpdateCoins(int coins)
 	{
 		coinsText.text = coins.ToString();
@@ -57,7 +62,7 @@ public class Menu : MonoBehaviour {
 			}
 		}
 
-		GameManager.gm.Save();
+		//GameManager.gm.Save();
 	}
 
 	public void GetReward(int missionIndex)

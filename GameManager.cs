@@ -42,17 +42,17 @@ public class GameManager : MonoBehaviour {
 		}
 		DontDestroyOnLoad(gameObject);
 
-		filePath = Application.persistentDataPath + "/playerInfo.dat";
+		filePath = Application.persistentDataPath + "/save.sav";
 
 		missions = new MissionBase[2];
 
-		if (File.Exists(filePath))
-		{
-			Load();
-		}
+		//if (File.Exists(filePath))
+		//{
+			//Load();
+		//}
 
-		else
-		{
+		//else
+		//{
 			for (int i = 0; i < missions.Length; i++)
 			{
 				GameObject newMission = new GameObject("Mission" + i);
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour {
 
 				missions[i].Created();
 			}
-		}
+		//}
 		
 	}
 
@@ -99,16 +99,16 @@ public class GameManager : MonoBehaviour {
 
 		for (int i = 0; i < 2; i++)
 		{
-			data.max[i] = missions[i].max;
-			data.progress[i] = missions[i].progress;
-			data.currentProgress[i] = missions[i].currentProgress;
-			data.reward[i] = missions[i].reward;
-			data.missionType[i] = missions[i].missionType.ToString();
+		data.max[i] = missions[i].max;
+		data.progress[i] = missions[i].progress;
+		data.currentProgress[i] = missions[i].currentProgress;
+		data.reward[i] = missions[i].reward;
+		data.missionType[i] = missions[i].missionType.ToString();
 		}
 
 		for (int i = 0; i < characterCost.Length; i++)
 		{
-			data.characterCost[i] = characterCost[i];
+		data.characterCost[i] = characterCost[i];
 		}
 
 		bf.Serialize(file, data);
