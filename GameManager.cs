@@ -46,13 +46,13 @@ public class GameManager : MonoBehaviour {
 
 		missions = new MissionBase[2];
 
-		//if (File.Exists(filePath))
-		//{
-			//Load();
-		//}
+		if (File.Exists(filePath))
+		{
+			Load();
+		}
 
-		//else
-		//{
+		else
+		{
 			for (int i = 0; i < missions.Length; i++)
 			{
 				GameObject newMission = new GameObject("Mission" + i);
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour {
 
 				missions[i].Created();
 			}
-		//}
+		}
 		
 	}
 

@@ -238,6 +238,12 @@ public class Player : MonoBehaviour {
 				speed = 0;
 				anim.SetBool("Dead", true);
 				uiManager.gameOverPanel.SetActive(true);
+
+				//if(score > PlayServices.GetPlayerScore(EndlessRunnerServices.leaderboard_ranking))
+				//{
+					//PlayServices.PostScore((long)score, EndlessRunnerServices.leaderboard_ranking);
+				//}
+
 				Invoke("CallMenu", 2f);
 			}
 			else

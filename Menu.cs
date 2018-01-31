@@ -100,4 +100,9 @@ public class Menu : MonoBehaviour {
 		}
 		costText.text = cost;
 	}
+
+	public void ShowLeaderBoardUI()
+	{
+		PlayServices.ShowLeaderboard(EndlessRunnerServices.leaderboard_ranking);
+	}
 }
